@@ -1,13 +1,11 @@
-monthly.vs.yearly.payment <- function(x, m, r, P){ # Compare plans
+pmt.comp <- function(x, m, r, P){ # Compare monthly and yearly plans
   
-  # Calculate Monthly and Yearly plans
-  M <- sum(rep(-x, m) / ((1 + r) ^ (1 / m)) ^ (seq(along = rep(-x, m)) - 1)) 
-  Y <- sum(rep(-P / m, m) * ((1 + r) ^ (1 / m))^(seq(along = rep(-P / m, m)))) 
+  M <- sum(rep(x, m) / ((1 + r) ^ (1 / m)) ^ (seq(along = rep(x, m)) - 1)) 
+  Y <- sum(rep(P / m, m) * ((1 + r) ^ (1 / m)) ^ (seq(along = rep(P / m, m))))
   
-  D <- round(abs(Y - M), 2) # Calculate difference and show beneficial one
+  l <- paste("Subscribe to a %s plan as it is %s %% cheaper")
   
-  if (M > Y){ sprintf("Subscribe to a monthly payment as it is %s cheaper", D)
-    
-    } else { sprintf("Subscribe to a yearly payment as it is %s cheaper", D) }
+  ifelse(M > Y, sprintf(l, "yearly", round(abs((Y - M) / M), 2) * 100),
+         sprintf(l, "monthly", round(abs((M - Y) / Y), 2) * 100))
 }
-monthly.vs.yearly.payment(x = 6.99, m = 12, r = 0.05, P = 69.99) # Test
+pmt.comp(x = 6.99, m = 12, r = 0.05, P = 69.99) # Test
